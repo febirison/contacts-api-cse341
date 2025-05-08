@@ -33,6 +33,18 @@ const express = require('express');
      });
    }
 
+   // Input validation middleware
+   const validateContact = (req, res, next) => {
+     const { name, email, phone } = req.body;
+     if (!name || !email || !phone) {
+       return res.status(400).json({ error: 'Name, email, and phone are required' });
+     }
+     if (!email.includes('@')) {
+       return res.status(400).json({ error: 'Invalid email format' });
+     }
+     next();
+   };
+
    // Root route
    app.get('/', (req, res) => {
      res.send('Welcome to Contacts API');
@@ -52,6 +64,9 @@ const express = require('express');
    // Get contact by ID
    app.get('/contacts/:id', async (req, res) => {
      try {
+       if (!ObjectId.isValid(req.params.id)) {
+         return res.status(400).json({ error: 'Invalid contact ID' });
+       }
        const db = client.db('contactsDB');
        const contact = await db.collection('contacts').findOne({ _id: new ObjectId(req.params.id) });
        if (!contact) {
@@ -64,7 +79,7 @@ const express = require('express');
    });
 
    // Create a contact
-   app.post('/contacts', async (req, res) => {
+   app.post('/contacts', validateContact, async (req, res) => {
      try {
        const db = client.db('contactsDB');
        const result = await db.collection('contacts').insertOne(req.body);
@@ -75,8 +90,11 @@ const express = require('express');
    });
 
    // Update a contact
-   app.put('/contacts/:id', async (req, res) => {
+   app.put('/contacts/:id', validateContact, async (req, res) => {
      try {
+       if (!ObjectId.isValid(req.params.id)) {
+         return res.status(400).json({ error: 'Invalid contact ID' });
+       }
        const db = client.db('contactsDB');
        const result = await db.collection('contacts').updateOne(
          { _id: new ObjectId(req.params.id) },
@@ -94,6 +112,9 @@ const express = require('express');
    // Delete a contact
    app.delete('/contacts/:id', async (req, res) => {
      try {
+       if (!ObjectId.isValid(req.params.id)) {
+         return res.status(400).json({ error: 'Invalid contact ID' });
+       }
        const db = client.db('contactsDB');
        const result = await db.collection('contacts').deleteOne({ _id: new ObjectId(req.params.id) });
        if (result.deletedCount === 0) {
