@@ -1,4 +1,4 @@
-## Contacts API
+# Contacts API
 
 A RESTful API for managing contacts, built with Express and MongoDB Atlas.
 
