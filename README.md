@@ -1,44 +1,50 @@
-# Contacts API
+  # Contacts API
 
-A RESTful API for managing contacts, built with Express and MongoDB Atlas.
+  A RESTful API for managing contacts, built with Express and MongoDB Atlas.
 
-## Deployment
+  ## Deployment
 
-The API is deployed at: [https://contacts-api-cse341.onrender.com/](https://contacts-api-cse341.onrender.com/)
+  The API is deployed at: [https://contacts-api-cse341.onrender.com/](https://contacts-api-cse341.onrender.com/)
 
-## Setup
+  ## Project Structure
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/febirison/contacts-api-cse341.git
-   cd contacts-api-cse341
-   ```
+  The project follows MVC architecture:
+  - **Models** (`models/contactModel.js`): Handles MongoDB connection and database operations.
+  - **Controllers** (`routes/contacts.js`): Defines Express routes and input validation.
+  - **Server** (`server.js`): Initializes Express, connects routes, and starts the server.
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+  ## Setup
 
-3. Create a `.env` file:
-   ```bash
-   echo "MONGO_URI=mongodb+srv://<user>:<password>@contactscluster.9rtk9fa.mongodb.net/contactsDB?retryWrites=true&w=majority" > .env
-   ```
+  1. Clone the repository:
+     ```bash
+     git clone https://github.com/febirison/contacts-api-cse341.git
+     cd contacts-api-cse341
+     ```
 
-4. Start the server:
-   ```bash
-   npm start
-   ```
+  2. Install dependencies:
+     ```bash
+     npm install
+     ```
 
-## API Routes
+  3. Create a `.env` file:
+     ```bash
+     echo "MONGO_URI=mongodb+srv://<user>:<password>@contactscluster.9rtk9fa.mongodb.net/contactsDB?retryWrites=true&w=majority" > .env
+     ```
 
-- **GET /contacts**: Retrieve all contacts.
-- **GET /contacts/:id**: Retrieve a contact by ID.
-- **POST /contacts**: Create a new contact (requires `name`, `email`, `phone`).
-- **PUT /contacts/:id**: Update a contact by ID.
-- **DELETE /contacts/:id**: Delete a contact by ID.
+  4. Start the server:
+     ```bash
+     npm start
+     ```
 
-## Example Request
+  ## API Routes
 
-```bash
-curl -X POST http://localhost:3000/contacts -H "Content-Type: application/json" -d '{"name":"John Doe","email":"john@example.com","phone":"123-456-7890"}'
-```
+  - **GET /contacts**: Retrieve all contacts.
+  - **GET /contacts/:id**: Retrieve a contact by ID.
+  - **POST /contacts**: Create a new contact (requires `name`, `email`, `phone`).
+  - **PUT /contacts/:id**: Update a contact by ID.
+  - **DELETE /contacts/:id**: Delete a contact by ID.
+
+  ## Example Request
+
+  ```bash
+  curl -X POST http://localhost:3000/contacts -H "Content-Type: application/json" -d '{"name":"John Doe","email":"john@example.com","phone":"123-456-7890"}'
