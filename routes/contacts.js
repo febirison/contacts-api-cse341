@@ -1,5 +1,5 @@
-// Description: This module handles MongoDB operations for the contacts collection.
-//        const { name, email, phone } = req.body;
+// routes/contacts.js
+// Description: API routes for managing contacts
 const express = require('express');
 const router = express.Router();
 const {
@@ -12,9 +12,9 @@ const {
 
 // Input validation middleware
 const validateContact = (req, res, next) => {
-  const { name, email, phone } = req.body;
-  if (!name || !email || !phone) {
-    return res.status(400).json({ error: 'Name, email, and phone are required' });
+  const { firstName, lastName, email, favoriteColor, birthday } = req.body;
+  if (!firstName || !lastName || !email || !favoriteColor || !birthday) {
+    return res.status(400).json({ error: 'All fields (firstName, lastName, email, favoriteColor, birthday) are required' });
   }
   if (!email.includes('@')) {
     return res.status(400).json({ error: 'Invalid email format' });
@@ -52,9 +52,9 @@ router.get('/:id', async (req, res) => {
 router.post('/', validateContact, async (req, res) => {
   try {
     const newContact = await createContact(req.body);
-    res.status(201).json(newContact);
+    res.status(201).json({ id: newContact._id, ...newContact });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -62,14 +62,14 @@ router.post('/', validateContact, async (req, res) => {
 router.put('/:id', validateContact, async (req, res) => {
   try {
     const result = await updateContact(req.params.id, req.body);
-    res.json(result);
+    res.status(200).json(result);
   } catch (error) {
     if (error.message === 'Invalid contact ID') {
       res.status(400).json({ error: error.message });
     } else if (error.message === 'Contact not found') {
       res.status(404).json({ error: error.message });
     } else {
-      res.status(500).json({ error: error.message });
+      res.status(400).json({ error: error.message });
     }
   }
 });
@@ -78,7 +78,7 @@ router.put('/:id', validateContact, async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const result = await deleteContact(req.params.id);
-    res.json(result);
+    res.status(200).json(result);
   } catch (error) {
     if (error.message === 'Invalid contact ID') {
       res.status(400).json({ error: error.message });

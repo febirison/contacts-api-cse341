@@ -1,0 +1,39 @@
+ GET http://localhost:3000/contacts
+
+ # Create a contact (valid)
+ POST http://localhost:3000/contacts
+ Content-Type: application/json
+
+ {
+   "name": "John Doe",
+   "email": "john@example.com",
+   "phone": "123-456-7890"
+ }
+
+ # Create a contact (invalid - missing email)
+ POST http://localhost:3000/contacts
+ Content-Type: application/json
+
+ {
+   "name": "Jane Doe",
+   "phone": "987-654-3210"
+ }
+
+ # Get contact by ID (replace <id> with actual ID)
+ GET http://localhost:3000/contacts/<id>
+
+ # Update contact (valid)
+ PUT http://localhost:3000/contacts/<id>
+ Content-Type: application/json
+
+ {
+   "name": "John Smith",
+   "email": "john.smith@example.com",
+   "phone": "987-654-3210"
+ }
+
+ # Delete contact
+ DELETE http://localhost:3000/contacts/<id>
+
+ # Invalid ID test
+ GET http://localhost:3000/contacts/invalid-id

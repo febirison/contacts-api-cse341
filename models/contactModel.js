@@ -1,5 +1,4 @@
 // Description: This module handles MongoDB operations for the contacts collection.
-//        const { name, email, phone } = req.body;
 const { MongoClient, ObjectId } = require('mongodb');
 require('dotenv').config();
 
@@ -18,6 +17,17 @@ async function connectToMongoDB() {
   } catch (error) {
     console.error('MongoDB connection error:', error);
     process.exit(1);
+  }
+}
+
+// Validate contact data
+function validateContactData(contactData) {
+  const { firstName, lastName, email, favoriteColor, birthday } = contactData;
+  if (!firstName || !lastName || !email || !favoriteColor || !birthday) {
+    throw new Error('All fields (firstName, lastName, email, favoriteColor, birthday) are required');
+  }
+  if (!email.includes('@')) {
+    throw new Error('Invalid email format');
   }
 }
 
@@ -49,10 +59,11 @@ async function getContactById(id) {
 // Create a contact
 async function createContact(contactData) {
   try {
+    validateContactData(contactData);
     const result = await db.collection('contacts').insertOne(contactData);
     return { _id: result.insertedId, ...contactData };
   } catch (error) {
-    throw new Error('Failed to create contact');
+    throw new Error(error.message || 'Failed to create contact');
   }
 }
 
@@ -62,6 +73,7 @@ async function updateContact(id, contactData) {
     if (!ObjectId.isValid(id)) {
       throw new Error('Invalid contact ID');
     }
+    validateContactData(contactData);
     const result = await db.collection('contacts').updateOne(
       { _id: new ObjectId(id) },
       { $set: contactData }
